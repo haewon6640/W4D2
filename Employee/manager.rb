@@ -26,7 +26,6 @@ class Manager < Employee
         end
         sum
     end
-
 end
 
 ned = Manager.new("Ned","Founder",1000000,nil)
