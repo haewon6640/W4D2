@@ -1,7 +1,8 @@
 class Piece
     
-    def initialize(piece_name)
+    def initialize(piece_name, color = "white")
         @value = piece_name
+        @color = color == "white" ?  color :  "black"
     end
 
 end
