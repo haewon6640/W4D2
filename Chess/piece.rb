@@ -9,7 +9,19 @@ class Piece
     end
 
     def Symbol
-        symbol
+        raise NotImplementedError
+    end
+
+    def to_s
+        return '#{Symbol}'
+    end
+
+    def empty?
+        board[pos].empty?
+    end
+
+    def valid_moves
+
     end
 
     private
@@ -32,9 +44,11 @@ class Rook < Piece
     
     private
     def move_dirs
-
+        horizontal_dirs + vertical_dirs
     end
+
     # def initialize(position,color)
     #     super
     # end
+
 end

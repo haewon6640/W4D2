@@ -1,21 +1,30 @@
 module Slideable
 
     def horizontal_dirs
+        HORIZONTAL_DIRS
+    end
+
+    def vertical_dirs 
+        VERTICAL_DIRS
     end
     
     def diagonal_dirs
+        DIAGONAL_DIRS
     end
 
     def moves
+        result = []
+        move_dirs.each {|dir| result += grow_unblocked_moves_in_dir(dir[0], dir[1]) }
+        result
     end
 
     private
-    HORIZONTAL_DIRS = [[0,1][0,-1]]
-    VERTICAL_DIRS = [[1,0][-1,0]]
-    DIAGONAL_DIRS = [[1,1][-1,1],[1,-1],[-1,1]]
+    HORIZONTAL_DIRS = [[0,1][0,-1]].freeze
+    VERTICAL_DIRS = [[1,0][-1,0]].freeze
+    DIAGONAL_DIRS = [[1,1][-1,1],[1,-1],[-1,1]].freeze 
 
     def move_dirs()
-        # keep going until it is blocked
+        raise NotImplementedError
     end
 
     def grow_unblocked_moves_in_dir(dx,dy)
