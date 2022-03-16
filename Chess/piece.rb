@@ -1,7 +1,11 @@
-require_relative 'modules'
+require 'singleton'
+require_relative 'slideable'
+require_relative 'stepable'
+
 
 class Piece
-    attr_reader :color, :pos, :board
+    attr_reader :color, :board
+    attr_accessor :pos
     def initialize(curr_position, board, color = "white")
         @board = board
         @pos = curr_position
@@ -30,28 +34,42 @@ class Piece
 end
 
 class NullPiece < Piece
+    include Singleton
     def initialize
-        @value = nil
+        
     end
+
+    def color
+        "Nil"
+    end
+
+    def symbol 
+        " _ "
+    end
+
+    def moves
+    end
+
 end
 
 class Rook < Piece
 
-    # include Slideable
+    include Slideable
     def symbol
-        "R"
+        " R "
     end
     
     private
     def move_dirs
-        horizontal_dirs + vertical_dirs
+        horizontal_dirs
     end
 
 end
 
 class Bishop < Piece
+    include Slideable
     def symbol
-        "B"
+        " B "
     end
 
     private
@@ -62,33 +80,38 @@ class Bishop < Piece
 end
 
 class Queen < Piece
+    include Slideable
     def symbol
-        "Q"
+        " Q "
     end
 
     private
     def move_dirs
-        diagonal_dirs + horizontal_dirs + vertical_dirs
+        dirs = diagonal_dirs + horizontal_dirs
+        dirs
     end
 
 end
 
 
 class Knight < Piece
+    include Stepable
     def symbol
-        "N"
+        " N "
     end
 
     private
     def move_diffs
-        [[1,2], [1,-2], [-1,2], [-1,-2], [2,1], [-2,1], [-2.-1], [-2,-1]]
+        [[1,2], [1,-2], [-1,2], [-1,-2], [2,1], [-2,1], [2,-1], [-2,-1]]
     end
 end
 
 
 class King < Piece
+    include Stepable
+
     def symbol
-        "K"
+        " K "
     end
 
     private
@@ -99,15 +122,18 @@ end
 
 class Pawn < Piece
     def symbol
-        "P"
+        " P "
     end
 
     def moves
         poss_moves = []
-        if at_start_row
-            poss_moves << pos + forward_steps + forward_steps
 
-        [1,0]
+        poss_moves << [pos[0]+forward_steps[0],pos[1]+forward_steps[1]]
+        if at_start_row?
+            poss_moves << [pos[0]+2*forward_steps[0],pos[1]+2*forward_steps[1]]
+        end
+        poss_moves.reject {|move| board[move] != NullPiece}
+        poss_moves << side_attacks
     end
 
     private
@@ -126,11 +152,20 @@ class Pawn < Piece
     end
 
     def forward_steps
-        forward_dir * [1,0]
+        [forward_dir*1,0]
     end
-
+    # returns possible attack moves
     def side_attacks
-
+        # if black [1,1],[1,-1]
+        # if white [-1,1], [-1,-1]
+        attack_moves = []
+        delta = [[forward_dir*1,forward_dir*1],[forward_dir*1,forward_dir*-1]]
+        if board[[pos[0] + delta[0][0],pos[1] + delta[0][1]]].color != color
+            attack_moves << [pos[0] + delta[0][0],pos[1] + delta[0][1]]
+        elsif board[[pos[0] + delta[1][0],pos[1] + delta[1][1]]].color != color
+            attack_moves << [pos[0] + delta[1][0],pos[1] + delta[1][1]]
+        end
+        attack_moves
     end
 
 end

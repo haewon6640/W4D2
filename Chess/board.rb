@@ -17,50 +17,67 @@ class Board
     end
     # [7,0] [6,0]
     def move_piece(start_pos,end_pos)
-        raise "No piece" if self[start_pos].is_a?(NullPiece)
-        raise "Piece cannot move to #{end_pos}" unless self[end_pos].is_a?(NullPiece)
+        # By calling piece.moves, we have access to all the valid moves
         piece = self[start_pos]
+        raise "No piece" if piece.is_a?(NullPiece)
+        raise "Piece cannot move to #{end_pos}" unless piece.moves.include?(end_pos)
+        piece.pos = end_pos
         self[end_pos] = piece
-        self[start_pos] = NullPiece.new()
+        self[start_pos] = NullPiece.instance
+    end
+
+    def print 
+        result = ""
+        board.each do |row|
+            rowStr = ""
+            row.each do |piece|
+                rowStr << piece.symbol
+            end
+            result << rowStr + "\n"
+        end
+        puts result
+        return nil
     end
 
     private
     attr_accessor :board
     def set_pieces
-        (0..7).each do |i|
-            (0..7).each do |j|
-                self[[i,j]] = Rook.new([i,j],self)
+        ["black","white"].each do |color|
+            (0..3).each do |col|
+                row = color == "black" ? 0 : 7
+                pawn_row = color == "black" ? 1 : 6
+                if col == 0
+                    self[[row,col]] = Rook.new([row,col],self,color)
+                    self[[row,7-col]] = Rook.new([row,7-col],self,color)
+                elsif col == 1
+                    self[[row,col]] = Knight.new([row,col],self,color)
+                    self[[row,7-col]] = Knight.new([row,7-col],self,color)
+                elsif col == 2
+                    self[[row,col]] = Bishop.new([row,col],self,color)
+                    self[[row,7-col]] = Bishop.new([row,7-col],self,color)
+                else
+                    (0..7).each do |j|
+                        self[[pawn_row,j]] = Pawn.new([pawn_row,j],self,color)
+                    end
+                end
             end
-        end 
-        # board[0][0] = Piece.new("Rook", 1)
-        # board[0][7] = Piece.new("Rook", 1)
-        # board[0][1] = Piece.new("Knight", 1)
-        # board[0][6] = Piece.new("Knight", 1)
-        # board[0][2] = Piece.new("Bishop", 1)
-        # board[0][5] = Piece.new("Bishop", 1)
-        # board[0][3] = Piece.new("Queen", 1)
-        # board[0][4] = Piece.new("King", 1)
-        # (0..7).each do |j|
-        #     board[1][j] = Piece.new("Pawn", 1)    
-        # end
+        end
 
-        # board[7][0] = Piece.new("Rook")
-        # board[7][7] = Piece.new("Rook")
-        # board[7][1] = Piece.new("Knight")
-        # board[7][6] = Piece.new("Knight")
-        # board[7][2] = Piece.new("Bishop")
-        # board[7][5] = Piece.new("Bishop")
-        # board[7][3] = Piece.new("King")
-        # board[7][4] = Piece.new("Queen")
-        # (0..7).each do |j|
-        #     board[6][j] = Piece.new("Pawn")    
-        # end
+        self[[0,3]] = Queen.new([0,3],self, "black")
+        self[[0,4]] = King.new([0,4],self, "black")
+        self[[7,3]] = Queen.new([7,3],self, "white")
+        self[[7,4]] = King.new([7,4],self, "white")
 
-        # (2..5).each do |i|
-        #     (0..7).each do |j|
-        #         board[i][j] = NullPiece.new
-        #     end
-        # end
+        (2..5).each do |i|
+            (0..7).each do |j|
+                self[[i,j]] = NullPiece.instance
+            end
+        end
 
     end
 end
+
+b = Board.new
+
+p b.move_piece([1,0],[3,0])
+b.print
