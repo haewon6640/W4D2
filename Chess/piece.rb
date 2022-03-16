@@ -132,8 +132,10 @@ class Pawn < Piece
         if at_start_row?
             poss_moves << [pos[0]+2*forward_steps[0],pos[1]+2*forward_steps[1]]
         end
-        poss_moves.reject {|move| board[move] != NullPiece}
-        poss_moves << side_attacks
+        poss_moves.reject! do |move| 
+            !board[move].is_a?(NullPiece)
+        end
+        poss_moves += side_attacks
     end
 
     private
@@ -154,10 +156,9 @@ class Pawn < Piece
     def forward_steps
         [forward_dir*1,0]
     end
-    # returns possible attack moves
+
     def side_attacks
-        # if black [1,1],[1,-1]
-        # if white [-1,1], [-1,-1]
+
         attack_moves = []
         delta = [[forward_dir*1,forward_dir*1],[forward_dir*1,forward_dir*-1]]
         if board[[pos[0] + delta[0][0],pos[1] + delta[0][1]]].color != color

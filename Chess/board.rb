@@ -79,5 +79,15 @@ end
 
 b = Board.new
 
-p b.move_piece([1,0],[3,0])
+b.move_piece([1,0],[3,0])
+b.move_piece([0,0],[2,0])
+b.move_piece([1,3],[3,3])
+b.move_piece([0,3],[2,3])
+# b.move_piece([0,0],[-1,0])
+b.move_piece([6,0],[4,0])
+b.move_piece([6,1],[4,1])
 b.print
+b.move_piece([4,1],[3,0])
+
+b.print
+

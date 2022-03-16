@@ -11,7 +11,6 @@ module Slideable
     def moves
         result = []
         move_dirs.each do |dir|
-            p dir
             result += grow_unblocked_moves_in_dir(dir[0], dir[1])
         end
         result
@@ -27,13 +26,11 @@ module Slideable
 
     def grow_unblocked_moves_in_dir(dx,dy)
         poss_moves = []
-        multliplier = 1
+        multiplier = 1
         constant_deltaX = dx 
         constant_deltaY = dy 
-
-        while board[[pos[0] + dx,pos[1] + dy]] == NullPiece || board[[pos[0] + dx,pos[1] + dy]].color != color
-
-            if (board[[pos[0] + dx,pos[1] + dy]].color != color)
+        while (board[[pos[0] + dx,pos[1] + dy]].is_a?(NullPiece) || board[[pos[0] + dx,pos[1] + dy]].color != color) && (pos[0] + dx >= 0 && pos[1] + dy >= 0)
+            if (board[[pos[0] + dx,pos[1] + dy]].color != color) && board[[pos[0] + dx,pos[1] + dy]].color != "Nil"
                 poss_moves << [pos[0]+dx,pos[1]+dy]
                 break
             end
@@ -42,7 +39,6 @@ module Slideable
             dx = constant_deltaX*multiplier
             dy = constant_deltaY*multiplier
         end
-        p poss_moves
         poss_moves
 
     end
