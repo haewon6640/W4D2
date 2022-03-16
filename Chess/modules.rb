@@ -26,9 +26,36 @@ module Slideable
     def move_dirs()
         raise NotImplementedError
     end
+    # [0,1]:right [1,0]:down
+    # curr_position = [3,3] dx,dy = [0,1]
+    # [1,1] 
+    # [3,4],[3,5],[3,6],[3,7] until not out of bounds or blocked
+    # poss_moves will have [3,6] if it is the first blocking opposing piece
+    # [3,3] white rook, at [3,6] black piece
+    # poss moves will ahve [3,6]
 
     def grow_unblocked_moves_in_dir(dx,dy)
-        @board
+        poss_moves = []
+        multliplier = 1
+        constant_deltaX = dX # constantX = 0 dX = 0
+        constant_deltaY = dY # constantY = 1 dY = 1
+        color
+        #[3,3]
+        # board[3,6] gives us the piece at [3,6]
+        while board[curr_position[0] + dx,curr_position[1] + dy] == NullPiece \
+            || board[curr_position[0] + dx,curr_position[1] + dy].color != color
+
+            if (board[curr_position[0] + dx,curr_position[1] + dy].color != color)
+                poss_moves << [curr_position[0]+dx,curr_position[1]+dy]
+                break
+            end
+            poss_moves << [curr_position[0]+dx,curr_position[1]+dy]
+            multiplier +=1
+            dx = constant_deltaX*multiplier
+            dy = constant_deltaY*multiplier
+        end
+        poss_moves
+
     end
 end
 
