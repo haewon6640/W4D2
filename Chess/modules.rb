@@ -55,7 +55,6 @@ module Slideable
             dy = constant_deltaY*multiplier
         end
         poss_moves
-
     end
 end
 
