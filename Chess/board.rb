@@ -8,6 +8,9 @@ class Board
 
     def [](pos) # [2,3]
         row,col = pos
+        if @board[row] == nil
+            return nil
+        end
         @board[row][col]
     end
 
@@ -42,10 +45,10 @@ class Board
     private
     attr_accessor :board
     def set_pieces
-        ["black","white"].each do |color|
+        [:black,:white].each do |color|
             (0..3).each do |col|
-                row = color == "black" ? 0 : 7
-                pawn_row = color == "black" ? 1 : 6
+                row = color == :black ? 0 : 7
+                pawn_row = color == :black ? 1 : 6
                 if col == 0
                     self[[row,col]] = Rook.new([row,col],self,color)
                     self[[row,7-col]] = Rook.new([row,7-col],self,color)
@@ -63,10 +66,10 @@ class Board
             end
         end
 
-        self[[0,3]] = Queen.new([0,3],self, "black")
-        self[[0,4]] = King.new([0,4],self, "black")
-        self[[7,3]] = Queen.new([7,3],self, "white")
-        self[[7,4]] = King.new([7,4],self, "white")
+        self[[0,3]] = Queen.new([0,3],self, :black)
+        self[[0,4]] = King.new([0,4],self, :black)
+        self[[7,3]] = Queen.new([7,3],self, :white)
+        self[[7,4]] = King.new([7,4],self, :white)
 
         (2..5).each do |i|
             (0..7).each do |j|
@@ -75,19 +78,28 @@ class Board
         end
 
     end
+
+    # Check Empty and Valid position
+    def empty?(position)
+        return true if board[position].is_a?(NullPiece)
+        false
+    end
+
+    def valid_range?(pos)
+        return true if pos[0] >= 0 && pos[1] >= 0 && pos[0] < 8 && pos[1] < 8
+        false
+    end
+
+    def valid_move?(pos)
+        valid_range?(pos) && empty?(pos)
+    end
 end
 
-b = Board.new
 
-b.move_piece([1,0],[3,0])
-b.move_piece([0,0],[2,0])
-b.move_piece([1,3],[3,3])
-b.move_piece([0,3],[2,3])
-# b.move_piece([0,0],[-1,0])
-b.move_piece([6,0],[4,0])
+
+b = Board.new
+b.print
 b.move_piece([6,1],[4,1])
 b.print
-b.move_piece([4,1],[3,0])
-
+b.move_piece([7,2],[5,0])
 b.print
-

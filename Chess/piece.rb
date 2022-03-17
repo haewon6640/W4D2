@@ -1,15 +1,16 @@
 require 'singleton'
 require_relative 'slideable'
 require_relative 'stepable'
-
+require 'colorize'
 
 class Piece
     attr_reader :color, :board
     attr_accessor :pos
-    def initialize(curr_position, board, color = "white")
+    def initialize(curr_position, board, color = :white)
         @board = board
         @pos = curr_position
-        @color = color == "white" ?  color :  "black"
+        @color = color
+        @printColor = color == :black ? :red : :blue
     end
 
     def Symbol
@@ -56,7 +57,7 @@ class Rook < Piece
 
     include Slideable
     def symbol
-        " R "
+        " R ".colorize( @printColor)
     end
     
     private
@@ -69,7 +70,7 @@ end
 class Bishop < Piece
     include Slideable
     def symbol
-        " B "
+        " B ".colorize( @printColor)
     end
 
     private
@@ -82,7 +83,7 @@ end
 class Queen < Piece
     include Slideable
     def symbol
-        " Q "
+        " Q ".colorize( @printColor)
     end
 
     private
@@ -97,7 +98,7 @@ end
 class Knight < Piece
     include Stepable
     def symbol
-        " N "
+        " N ".colorize( @printColor)
     end
 
     private
@@ -111,7 +112,7 @@ class King < Piece
     include Stepable
 
     def symbol
-        " K "
+        " K ".colorize( @printColor)
     end
 
     private
@@ -122,7 +123,7 @@ end
 
 class Pawn < Piece
     def symbol
-        " P "
+        " P ".colorize( @printColor)
     end
 
     def moves
@@ -140,9 +141,9 @@ class Pawn < Piece
 
     private
     def at_start_row?
-        if pos[0] == 1 && color == "black"
+        if pos[0] == 1 && color == :black
             return true
-        elsif pos[0] == 6 && color == "white"
+        elsif pos[0] == 6 && color == :white
             return true
         else
             false
@@ -150,7 +151,7 @@ class Pawn < Piece
     end
 
     def forward_dir
-        return color == "white" ? -1 : 1
+        return color == :white ? -1 : 1
     end
 
     def forward_steps
