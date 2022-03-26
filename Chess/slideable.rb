@@ -63,5 +63,6 @@ module Slideable
         #     dx = constant_deltaX*multiplier
         #     dy = constant_deltaY*multiplier
         # end
+        end
     end
 end
